@@ -1,6 +1,15 @@
 const UserArticlesService = {
   getAllUserArticles(knex) {
-    return knex.select('*').from('user_articles')
+    return knex
+      .select(
+        'user_articles.*',
+        'articles.id as article_id',
+        'articles.title as article_title',
+        'articles.topic as article_topic',
+        'articles.url as article_url'
+      )
+      .from('user_articles')
+      .join('articles', 'articles.id', 'user_articles.article_id')
   },
   insertUserArticle(knex, newUserArticle) {
     return knex

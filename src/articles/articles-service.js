@@ -2,6 +2,12 @@ const ArticlesService = {
   getAllArticles(knex) {
     return knex.select('*').from('articles')
   },
+  getAllArticlesByTopic(knex, topic) {
+    return knex
+      .select('*')
+      .from('articles')
+      .where({ topic })
+  },
   insertArticle(knex, newArticle) {
     return knex
       .insert(newArticle)
