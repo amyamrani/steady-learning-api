@@ -1,7 +1,5 @@
-const bcrypt          = require('bcrypt')                         // bcrypt will encrypt passwords to be saved in db
-const crypto          = require('crypto')
-const jwt = require('jsonwebtoken');
-const config = require('../config');
+const bcrypt = require('bcrypt')
+const crypto = require('crypto')
 
 const UsersService = {
   getById(knex, id) {
@@ -22,7 +20,6 @@ const UsersService = {
     )
   },
 
-  // user will be saved to db - we're explicitly asking postgres to return back helpful info from the row created
   createUser(knex, user) {
     return knex
       .insert(user)
@@ -33,7 +30,6 @@ const UsersService = {
       })
   },
 
-  // crypto ships with node - we're leveraging it to create a random, secure token
   createToken() {
     return new Promise((resolve, reject) => {
       crypto.randomBytes(16, (err, data) => {

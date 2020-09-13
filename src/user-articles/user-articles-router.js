@@ -60,9 +60,6 @@ userArticlesRouter
       .catch(next)
   })
 
-
-  // add the delete endpoint here:
-
 userArticlesRouter
   .route('/:id')
 
@@ -78,7 +75,7 @@ userArticlesRouter
           })
         }
         res.userArticle = userArticle
-        next() // call next so the next middleware happens
+        next()
       })
       .catch(next)
   })

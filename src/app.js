@@ -33,10 +33,6 @@ app.use('/api/articles', articlesRouter)
 app.use('/api/user_articles', userArticlesRouter)
 app.use('/api/plans', plansRouter)
 
-app.get('/', (req, res) => {
-  res.send('Hello, world!')
-})
-
 app.use(errorHandler)
 
 module.exports = app
