@@ -1,14 +1,30 @@
-const logger = require('./logger')
+const UserService = require('./users/users-service');
 
 function validateBearerToken(req, res, next) {
-  const apiToken = process.env.API_TOKEN
-  const authToken = req.get('Authorization')
+  const authHeader = req.get('Authorization')
+  const authToken = authHeader.split(' ')[1]
 
-  if (!authToken || authToken.split(' ')[1] !== apiToken) {
-    logger.error(`Unauthorized request to path: ${req.path}`);
-    return res.status(401).json({ error: 'Unauthorized request' })
-  }
-  next()
+  try {
+    UserService.getByToken(
+      req.app.get('db'),
+      authToken
+    )
+      .then(user => {
+        if (!user) {
+          res.status(401).json({ error: 'Unauthorized request' });
+          next();
+          return;
+        }
+        req.user = user;
+        next();
+      })
+      .catch(err => {
+        next(err);
+      });
+  } catch (error) {
+    res.status(401).json({ error: 'Unauthorized request' });
+    next(err);
+  };
 }
 
 module.exports = validateBearerToken

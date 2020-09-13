@@ -8,6 +8,8 @@ const errorHandler = require('./errorHandler')
 const validateBearerToken = require('./validateBearerToken')
 const articlesRouter = require('./articles/articles-router')
 const userArticlesRouter = require('./user-articles/user-articles-router')
+const usersRouter = require('./users/users-router')
+const plansRouter = require('./plans/plans-router')
 
 const app = express()
 
@@ -23,10 +25,13 @@ app.use(
   })
 );
 
+app.use('/api/users', usersRouter)
+
 app.use(validateBearerToken)
 
 app.use('/api/articles', articlesRouter)
 app.use('/api/user_articles', userArticlesRouter)
+app.use('/api/plans', plansRouter)
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')
