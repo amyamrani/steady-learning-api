@@ -4,6 +4,8 @@ CREATE TABLE user_articles (
       REFERENCES users(id) ON DELETE CASCADE NOT NULL,
     article_id INTEGER
       REFERENCES articles(id) ON DELETE CASCADE NOT NULL,
+    plan_id INTEGER
+      REFERENCES plans(id) ON DELETE CASCADE NOT NULL,
     start_date TIMESTAMPTZ NOT NULL,
     completed_date TIMESTAMPTZ,
     status TEXT DEFAULT 'active' NOT NULL
