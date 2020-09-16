@@ -43,6 +43,12 @@ plansRouter
       }
     }
 
+    if (!day_count || day_count < 1 || day_count > 5) {
+      return res.status(400).json({
+        error: { message: 'Day count must be between 1 and 5' }
+      })
+    }
+
     PlansService.insertPlan(req.app.get('db'), newPlan)
       .then(plan => {
 

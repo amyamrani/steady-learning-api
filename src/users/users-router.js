@@ -9,51 +9,75 @@ usersRouter
   .route('/signup')
 
   .post(jsonParser, (request, response, next) => {
-      const user = request.body
+    const user = request.body
 
-      UsersService.hashPassword(user.password)
-        .then((hashedPassword) => {
-          delete user.password
-          user.password = hashedPassword
+    for (const key of ['first_name', 'last_name', 'email', 'password']) {
+      if (user[key] == null) {
+        return response.status(400).json({
+          error: { message: `Missing '${key}' in request body` }
         })
-        .then(() => UsersService.createToken())
-        .then(token => user.token = token)
-        .then(() => UsersService.createUser(request.app.get('db'), user))
-        .then(user => {
-          delete user.password
-          response.status(201).json(user)
-        })
-        .catch((err) => {
-          next()
-        })
+      }
+    }
+    UsersService.hashPassword(user.password)
+      .then((hashedPassword) => {
+        delete user.password
+        console.log('please222')
+        user.password = hashedPassword
+      })
+      .then(() => UsersService.createToken())
+      .then(token => user.token = token)
+      .then(() => UsersService.createUser(request.app.get('db'), user))
+      .then(user => {
+        console.log('please444')
+        delete user.password
+        response.status(201).json(user)
+      })
+      .catch((err) => {
+        console.log("hisiijvdisa")
+        console.log(err)
+        next()
+      })
   })
 
-  usersRouter
-    .route('/login')
+usersRouter
+  .route('/login')
 
-    .post(jsonParser, (request, response, next) => {
-      const userReq = request.body
-      let user;
-      UsersService.getByEmail(request.app.get('db'), userReq.email)
-        .then(foundUser => {
-          user = foundUser
+  .post(jsonParser, (request, response, next) => {
+    const userReq = request.body
+    let user;
 
-          if (!foundUser) {
-            throw new Error('User cannot be found.');
-          }
-          return UsersService.checkPassword(userReq.password, foundUser)
+    for (const key of ['email', 'password']) {
+      if (userReq[key] == null) {
+        return response.status(400).json({
+          error: { message: `Missing '${key}' in request body` }
         })
-        .then(res => UsersService.createToken())
-        .then(token => {
-          UsersService.updateUserToken(request.app.get('db'), user.id, token)
-          return token;
-        })
-        .then((token) => {
-          const newUser = {...user, token: token};
-          delete newUser.password
-          response.status(200).json(newUser)
-        })
-        .catch((err) => next())
-    })
+      }
+    }
+
+    UsersService.getByEmail(request.app.get('db'), userReq.email)
+      .then(foundUser => {
+        user = foundUser
+        if (!foundUser) {
+          throw new Error('User cannot be found.');
+        }
+
+        return UsersService.checkPassword(userReq.password, foundUser)
+      })
+      .then(res => {
+        return UsersService.createToken()
+      })
+      .then(token => {
+        UsersService.updateUserToken(request.app.get('db'), user.id, token)
+        return token;
+      })
+      .then((token) => {
+        const newUser = {...user, token: token};
+        delete newUser.password
+        response.status(200).json(newUser)
+      })
+      .catch((err) => {
+        next()
+      })
+  })
 
 module.exports = usersRouter

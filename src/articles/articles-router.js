@@ -82,7 +82,7 @@ articlesRouter
     if (numberOfValues === 0) {
       return res.status(400).json({
         error: {
-          message: `Request body must contain 'title', 'topic' and 'url`
+          message: `Request body must contain 'title', 'topic' and 'url'`
         }
       })
     }

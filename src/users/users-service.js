@@ -13,11 +13,7 @@ const UsersService = {
   },
 
   hashPassword(password) {
-    return new Promise((resolve, reject) =>
-      bcrypt.hash(password, 10, (err, hash) => {
-        err ? reject(err) : resolve(hash)
-      })
-    )
+    return bcrypt.hash(password, 10)
   },
 
   createUser(knex, user) {
