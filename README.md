@@ -167,18 +167,17 @@ Updates a user article by marking it complete or incomplete and returns a `204 N
 ```
 
 ## Technologies Used
-- **Back End**
-  - Node and Express
+**Back End**
+- Node and Express
   - JWT and bcrypt
-
-- **Testing**
+- Testing
   - Mocha
   - Chai and Supertest
-
-- **Database**
+- Database
   - PostgreSQL
   - Knex.js
 
-- **Production**
-  - Deployed via Heroku
+**Production**
+- Deployed via Heroku
+
 
