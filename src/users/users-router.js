@@ -21,20 +21,16 @@ usersRouter
     UsersService.hashPassword(user.password)
       .then((hashedPassword) => {
         delete user.password
-        console.log('please222')
         user.password = hashedPassword
       })
       .then(() => UsersService.createToken())
       .then(token => user.token = token)
       .then(() => UsersService.createUser(request.app.get('db'), user))
       .then(user => {
-        console.log('please444')
         delete user.password
         response.status(201).json(user)
       })
       .catch((err) => {
-        console.log("hisiijvdisa")
-        console.log(err)
         next()
       })
   })
