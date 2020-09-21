@@ -1,26 +1,183 @@
-# Express Boilerplate!
+# Steady Learning API
 
-This is a boilerplate project used for starting new projects!
+Server API interface for storing and delivering data to Steady Learning application
 
-## Set up
+## Introduction
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+Users are provided with a new article each day about a topic that they are interested in learning about for a set number of days
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+## Live App
+https://steady-learning.vercel.app
 
-## Scripts
+## Client Repo
+https://github.com/amyamrani/steady-learning
 
-Start the application `npm start`
+## API Endpoints
 
-Start nodemon for the application `npm run dev`
+### Sign Up: `POST /api/signup`
 
-Run the tests `npm test`
+Adds new user credentials to database and returns a JWT as long as the email is unique
 
-## Deploying
+**Sample Request Body**
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+```
+{
+  "first_name": "New",
+  "last_name": "User",
+  "email": "newuser@gmail.com",
+  "password': "Password123"
+}
+```
+
+**Sample Response Body**
+
+```
+{
+  "id": 5,
+  "first_name": "New",
+  "last_name": "User",
+  "email": "newuser@gmail.com",
+  "password": "Password123",
+  "date_created": "2020-09-19T20:36:38.024Z",
+  "token": "tHiSisASaMpLEjWtAUthToKEN"
+}
+```
+
+### Login: `POST /api/login`
+
+Validates the login credentials against the database and returns a JWT
+
+**Sample Request Body**
+
+```
+{
+  "email": "newuser@gmail.com",
+  "password': "Password123"
+}
+```
+**Sample Response Body**
+
+```
+{
+  "id": 5,
+  "first_name":"New",
+  "last_name":"User",
+  "email":"newuser@gmail.com",
+  "token":"tHiSisASaMpLEjWtAUthToKEN",
+  "date_created":"2020-09-19T20:36:38.024Z"
+}
+```
+
+### Add a New Topic: `POST /api/plans`
+
+Creates a plan for the new topic
+
+**Sample Request Body**
+
+```
+{
+  topic: "Cooking Basics",
+  day_count: "2"
+}
+```
+
+**Sample Response Body**
+
+```
+{
+  id: 38,
+  user_id: 5,
+  topic: "Cooking Basics",
+  day_count: 2,
+  status: "active"
+}
+```
+
+### Update/Archive a Plan : `PATCH /api/plans/:plan_id`
+
+Updates a user's plan and returns a `204 No Content`
+
+**Sample Request Body**
+
+```
+{
+  status: "archived"
+}
+```
+
+### Get Plan : `GET /api/plans/recent_plan`
+
+Retrieves the user's active plan
+
+**Sample Response Body**
+
+```
+{
+  id: 38,
+  user_id: 5,
+  topic: "Cooking Basics",
+  day_count: 2,
+  status: "active"
+}
+```
+
+### Get User Articles : `GET /api/user_articles?plan_id=38`
+
+Returns the user articles in a given plan
+
+**Sample Response Body**
+
+```
+[
+  {
+    "id": 66,
+    "user_id": 5,
+    "article":
+    {
+      "id": 1,
+      "title": "How to Make a Cake",
+      "topic": "Cooking Basics",
+      "url": "https://www.bhg.com/recipes/how-to/bake/how-to-make-a-cake/"
+    },
+    {
+      "id": 2,
+      "title": "Grill a Steak",
+      "topic": "Cooking Basics",
+      "url": "https://www.foodnetwork.com/how-to/articles/how-to-grill-steak-a-step-by-step-guide"
+    },
+    "start_date": "2020-09-19T20:52:06.922Z",
+    "completed_date": null,
+    "status": "active",
+    "plan_id": 38
+  }
+]
+```
+
+### Update a User Article : `PATCH /api/user_articles/:id`
+
+Updates a user article by marking it complete or incomplete and returns a `204 No Content`
+
+**Sample Request Body**
+
+```
+{
+  completed_date: "2020-09-21T00:30:07.695Z",
+  status: "completed"
+}
+```
+
+## Technologies Used
+- Back End
+  - Node and Express
+  - JWT and bcrypt
+
+- Testing
+  - Mocha
+  - Chai and Supertest
+
+- Database
+  - PostgreSQL
+  - Knex.js
+
+- Production
+  - Deployed via Heroku
